@@ -10,13 +10,12 @@ import java.util.Date;
 public class BankAccountUtils {
     public static BankAccount createBankAccount(String id , double balance){
         Client client = ClientUtils.createClient(1L);
-        BankAccount bankAccount = new BankAccount(id , balance , new Date() , client , null  );
-        return bankAccount;
+        return BankAccount.builder().id(id).balance(balance).createdAt(new Date()).clientdetails(client).build();
     }
 
     public static BankAccountDTO createBankAccountDTO(String id , double balance){
         ClientDTO clientDTO = ClientUtils.createClientDTO(1L);
-        BankAccountDTO bankAccountDTO = new BankAccountDTO(id , balance , new Date() , clientDTO);
-        return bankAccountDTO;
+        return BankAccountDTO.builder()
+                .id(id).balance(balance).createdAt(new Date()).clientDTO(clientDTO).build();
     }
 }

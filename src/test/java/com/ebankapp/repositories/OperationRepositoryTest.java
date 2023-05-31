@@ -1,7 +1,9 @@
 package com.ebankapp.repositories;
 
 import com.ebankapp.entity.BankAccount;
+import com.ebankapp.entity.Client;
 import com.ebankapp.entity.Operation;
+import com.ebankapp.utils.BankAccountUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,24 +26,16 @@ class OperationRepositoryTest {
         // given
         String accountId = "11";
         Long operationId = 122L;
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setId(accountId);
-        bankAccount.setBalance(500);
-        bankAccount.setCreatedAt(new Date());
+        BankAccount bankAccount = BankAccount.builder().id(accountId).balance(500).createdAt(new Date()).build();
         bankAccountRepository.save(bankAccount);
 
-
-        Operation operation = new Operation();
-        operation.setBankAccount(bankAccount);
-        operation.setOperationDate(new Date());
-        operation.setId(operationId);
-        operation.setAmount(Double.valueOf(200));
-
+        Operation operation = Operation.builder().bankAccount(bankAccount).operationDate(new Date()).id(operationId).amount(200d).build();
         operationRepository.save(operation);
 
         //when
         List<Operation> operations = operationRepository.findByBankAccountId(accountId);
-
+        // assert
         assertThat(operations).isNotNull();
+        assertThat(operations.size() == 1);
     }
 }

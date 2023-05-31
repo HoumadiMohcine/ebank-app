@@ -21,11 +21,9 @@ public class ClientServiceImpl implements ClientService {
     private ClientRepository clientRepository;
     @Override
     public Client saveClient(Client client) {
-        System.out.println("client in save = " + client.getEmail());
         log.info("Saving new client");
         client.setCreationDate(new Date());
-        Client client1 = clientRepository.save(client);
-        return client1;
+        return clientRepository.save(client);
     }
 
     @Override

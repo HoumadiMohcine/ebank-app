@@ -32,10 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BankAccountAPITest {
     @MockBean
     private BankAccountService bankAccountService;
-
     @MockBean
     private BankAccountMappers mappers;
-
     @Autowired
     private MockMvc mvc;
 
@@ -81,7 +79,7 @@ class BankAccountAPITest {
     }
 
     @Test
-    void shouldReturn404WhenGettingBankAccountNotFound() throws Exception , BankAccountUnfoundException {
+    void shouldReturn404WhenGettingBankAccountNotFound() throws Exception {
         when(bankAccountService.getBankAccount("1")).thenThrow(new BankAccountUnfoundException("le compte est Introuvable"));
         this.mvc
                 .perform(get("/accounts/1"))

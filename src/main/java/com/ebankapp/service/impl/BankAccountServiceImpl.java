@@ -1,6 +1,5 @@
 package com.ebankapp.service.impl;
 
-import com.ebankapp.dto.BankAccountDTO;
 import com.ebankapp.entity.BankAccount;
 import com.ebankapp.entity.Client;
 import com.ebankapp.entity.Operation;
@@ -11,7 +10,6 @@ import com.ebankapp.repositories.ClientRepository;
 import com.ebankapp.repositories.OperationRepository;
 import com.ebankapp.service.BankAccountService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,18 +31,16 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccount saveBankAccount(String clientID , long initialBalance) throws ClientUnfoundException{
-        log.info("inside savebankAccount");
         Client client=clientRepository.findById(Long.valueOf(clientID)).orElse(null);
         if(client==null){
-            log.info("inside client == null");
             throw new ClientUnfoundException("client not found");
         }
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setId(UUID.randomUUID().toString());
-        bankAccount.setClientdetails(client);
-        bankAccount.setBalance(initialBalance);
-        bankAccount.setCreatedAt(new Date());
-        log.info("before return save");
+        BankAccount bankAccount = BankAccount.builder()
+                .id(UUID.randomUUID().toString())
+                .clientdetails(client)
+                .balance(initialBalance)
+                .createdAt(new Date()).build();
+
         return bankAccountRepository.save(bankAccount);
     }
 

@@ -1,19 +1,16 @@
 package com.ebankapp.entity;
 
 import com.ebankapp.enums.OperationType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
 public class Operation {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

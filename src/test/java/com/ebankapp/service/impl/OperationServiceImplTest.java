@@ -8,6 +8,8 @@ import com.ebankapp.exception.BalanceInsufficientException;
 import com.ebankapp.exception.BankAccountUnfoundException;
 import com.ebankapp.repositories.BankAccountRepository;
 import com.ebankapp.repositories.OperationRepository;
+import com.ebankapp.utils.BankAccountUtils;
+import com.ebankapp.utils.ClientUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,65 +43,44 @@ class OperationServiceImplTest {
 
     @Test
     void shouldDoWithdrawalWhenBalanceIsEnough() throws BalanceInsufficientException, BankAccountUnfoundException {
-        Client client = createClient();
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setBalance(4000);
-        bankAccount.setCreatedAt(new Date());
-        bankAccount.setClientdetails(client);
+        // given
+        Client client = ClientUtils.createClient(1L);
+        BankAccount bankAccount = BankAccountUtils.createBankAccount("1" , 4000);
         client.getBankAccounts().add(bankAccount);
-
+        // when
         Mockito.when(bankAccountRepository.findById("1")).thenReturn(Optional.of(bankAccount));
         operationService.withdrawal("1" , 500 , "testing Withdrawal operation");
-
         Optional<BankAccount> result = bankAccountRepository.findById("1");
-
+        // assert
         assertEquals( result.get().getBalance() , 3500);
     }
 
     @Test
     void deposit() throws BankAccountUnfoundException {
-        Client client = createClient();
-        BankAccount bankAccount = new BankAccount();
-        //bankAccount.setId("1");
-        bankAccount.setBalance(4000);
-        bankAccount.setCreatedAt(new Date());
-        bankAccount.setClientdetails(client);
+        // given
+        Client client = ClientUtils.createClient(1L);
+        BankAccount bankAccount = BankAccountUtils.createBankAccount("1" , 4000);
         client.getBankAccounts().add(bankAccount);
-
+        // when
         Mockito.when(bankAccountRepository.findById("1")).thenReturn(Optional.of(bankAccount));
         operationService.deposit("1" , 500 , "testing Withdrawal operation");
-
         Optional<BankAccount> result = bankAccountRepository.findById("1");
-
+        // assert
         assertEquals( result.get().getBalance() , 4500);
     }
 
     @Test
     void accountHistory() throws BankAccountUnfoundException {
         //given
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setBalance(3000);
-        bankAccount.setCreatedAt(new Date());
-
+        BankAccount bankAccount = BankAccountUtils.createBankAccount("1" , 3000);
         List<Operation> operations = new ArrayList<>();
-        operations.add(new Operation(1L , new Date() , (double) 200, bankAccount , OperationType.DEPOSIT , "desc1"));
-        operations.add(new Operation(2L , new Date() , (double) 100, bankAccount , OperationType.WITHDRAWAL , "desc2"));
-        Mockito.when(operationRepository.findByBankAccountId("111")).thenReturn(operations);
+        operations.add(Operation.builder().id(1L).operationDate(new Date()).amount(200d).bankAccount(bankAccount).operationType(OperationType.DEPOSIT).description("desc DEPOSIT").build());
+        operations.add(Operation.builder().id(2L).operationDate(new Date()).amount(100d).bankAccount(bankAccount).operationType(OperationType.WITHDRAWAL).description("desc WITHDRAWAL").build());
         // when
+        Mockito.when(operationRepository.findByBankAccountId("111")).thenReturn(operations);
         List<Operation> result = operationService.accountHistory("111");
         // verify
         assertEquals(2, result.size());
         Mockito.verify(operationRepository, Mockito.times(1)).findByBankAccountId("111");
-    }
-
-    private Client createClient(){
-        Client client = new Client();
-        client.setId(1L);
-        client.setName("mohcine1");
-        client.setAddress("XXXX1");
-        client.setEmail("houmadi1@gmail.com");
-        client.setCreationDate(new Date());
-        client.setBankAccounts(new ArrayList<>());
-        return client;
     }
 }

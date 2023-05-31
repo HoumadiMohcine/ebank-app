@@ -5,17 +5,26 @@ import com.ebankapp.entity.Client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 public class ClientUtils {
     public static Client createClient(Long id){
-        Client client = new Client();
-        client.setId(id);
-        client.setName("mohcine" +id);
-        client.setEmail("houmadi"+id+"@gmail.com");
-        client.setAddress("XXXX" + id);
-        return client;
+        return Client.builder()
+                .id(id)
+                .name("mohcine" +id)
+                .email("houmadi"+id+"@gmail.com")
+                .address("XXXX" + id)
+                .bankAccounts(new ArrayList<>())
+                .build();
     }
 
     public static ClientDTO createClientDTO(Long id){
-        return new ClientDTO(id , "mohcine" +id , "XXXX" + id , "houmadi"+id+"@gmail.com");
+        return ClientDTO.builder()
+                .id(id)
+                .address("XXXX" + id)
+                .name("mohcine" +id )
+                .email("houmadi"+id+"@gmail.com")
+                .build();
     }
 }

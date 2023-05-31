@@ -36,7 +36,6 @@ class ClientServiceImplTest {
 
     @Test
     void getClient() throws ClientUnfoundException {
-
         Mockito.when(clientRepository.findById(1L)).thenReturn(Optional.of(ClientUtils.createClient(1L)));
         Client client = clientService.getClient(1L);
         //assert

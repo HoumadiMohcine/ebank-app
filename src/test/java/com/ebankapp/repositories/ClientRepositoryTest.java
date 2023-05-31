@@ -9,14 +9,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataJpaTest(
-        properties = {
-                "spring.jpa.properties.javax.persistence.validation.mode=none"
-        }
+@DataJpaTest(properties = {"spring.jpa.properties.javax.persistence.validation.mode=none"}
 )
 class ClientRepositoryTest {
     @Autowired
     private ClientRepository clientRepository;
+
     @Test
     void itShouldSearchClientsByName() {
         // given

@@ -35,10 +35,8 @@ import static org.mockito.Mockito.when;
 class ClientRestAPITest {
     @MockBean
     ClientService clientService;
-
     @MockBean
     BankAccountMappers mappers;
-
     @Autowired
     private MockMvc mvc;
 
@@ -47,7 +45,7 @@ class ClientRestAPITest {
         List<Client> list = new ArrayList<>();
         list.add(ClientUtils.createClient(1L));
         list.add(ClientUtils.createClient(2L));
-        Mockito.when(clientService.getAllClient()).thenReturn((new ArrayList<>(list)));
+        Mockito.when(clientService.getAllClient()).thenReturn(list);
         this.mvc
                 .perform(get("/clients"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(2))

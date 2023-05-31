@@ -30,13 +30,14 @@ public class OperationServiceImpl implements OperationService {
                 .orElseThrow(()->new BankAccountUnfoundException("BankAccount not found"));
         if(bankAccount.getBalance()<amount)
             throw new BalanceInsufficientException("Balance not sufficient");
-        Operation accountOperation=new Operation();
-        accountOperation.setOperationType(OperationType.WITHDRAWAL);
-        accountOperation.setAmount(amount);
-        accountOperation.setDescription(description);
-        accountOperation.setOperationDate(new Date());
-        accountOperation.setBankAccount(bankAccount);
+        Operation accountOperation=Operation.builder().
+                operationType(OperationType.WITHDRAWAL).
+                amount(amount).description(description).
+                operationDate(new Date()).
+                bankAccount(bankAccount).build();
+
         operationRepository.save(accountOperation);
+
         bankAccount.setBalance(bankAccount.getBalance()-amount);
         bankAccountRepository.save(bankAccount);
     }
@@ -45,12 +46,12 @@ public class OperationServiceImpl implements OperationService {
     public void deposit(String accountId, double amount, String description) throws BankAccountUnfoundException {
         BankAccount bankAccount=bankAccountRepository.findById(accountId)
                 .orElseThrow(()->new BankAccountUnfoundException("BankAccount not found"));
-        Operation accountOperation=new Operation();
-        accountOperation.setOperationType(OperationType.DEPOSIT);
-        accountOperation.setAmount(amount);
-        accountOperation.setDescription(description);
-        accountOperation.setOperationDate(new Date());
-        accountOperation.setBankAccount(bankAccount);
+        Operation accountOperation=Operation.builder().
+                operationType(OperationType.DEPOSIT).
+                amount(amount).description(description).
+                operationDate(new Date()).
+                bankAccount(bankAccount).build();
+
         operationRepository.save(accountOperation);
         bankAccount.setBalance(bankAccount.getBalance()+amount);
         bankAccountRepository.save(bankAccount);
